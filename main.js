@@ -72,4 +72,20 @@ function render()
     lucide.createIcons();
 }
 
+const form = document.getElementById('transaction-form');
+/**
+ * Runs when the user submits the transaction form.
+ * 
+ * @param{SubmitEvent} event- Information about the submit.
+ * @returns {void}
+ */
+
+function handleFormSubmit(event){
+    event.preventDefault();
+    console.log('Form submitted!');
+}
+
+form.addEventListener('submit',handleFormSubmit);
+
+
 render();
