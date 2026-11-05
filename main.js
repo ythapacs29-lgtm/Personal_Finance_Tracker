@@ -34,3 +34,41 @@ function calculateTotals(transactions) {
     return {income,expense, balance: income - expense};
 }
 
+
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
+/**
+ * Formats a number as US dollars.
+ * 
+ * @param {number} value- An amount in dollars
+ * @returns {string} The formatted text, for example $1400.00".
+ */
+
+function formatCurrency(value){
+    return currencyFormatter.format(value);
+}
+
+/**
+ * function render()
+ * writes the current totals into the metric cards in the page
+ * call this every time the data changes
+ * @returns void
+ */
+
+function render()
+{
+   const finalObject = calculateTotals(state.transactions);
+
+    document.getElementById("balance-amount").textContent= formatCurrency(finalObject.balance);
+
+    document.getElementById("income-amount").textContent= formatCurrency(finalObject.income);
+
+    document.getElementById("expense-amount").textContent=formatCurrency(finalObject.expense);
+
+    lucide.createIcons();
+}
+
+render();
