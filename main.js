@@ -8,8 +8,9 @@
 const state = {
     transactions: [
         {id:1, description:'Paycheck', amount:1200, type: 'income', category:'Salary', date:'2026-11-01'},
-        {id:2, description: 'Rent', amount:800, type:'expense',category:'Housing', date:'2026-11-02'},
+        {id:2, description: 'Rent', amount:500, type:'expense',category:'Housing', date:'2026-11-02'},
         {id:3, description:'Groceries', amount:95.5, type:'expense',category:'Food',date: '2026-11-03'},
+        {id:4, description: 'Freelance gig', amount: 1200, type: 'income', category:'Freelance' , date: '2026-11-04' },
     ],
 };
 
