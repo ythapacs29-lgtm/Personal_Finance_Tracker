@@ -1,0 +1,302 @@
+Claude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Style · CSS
+/* ==========================================================================
+   style.css
+   Custom layer on top of Tailwind utilities: design tokens, component
+   states, and animations that would be awkward to express as utilities.
+   ========================================================================== */
+ 
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --brand: #4f46e5;
+  --income: #059669;
+  --expense: #e11d48;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+ 
+html {
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+ 
+/* The `hidden` attribute must always win, even over Tailwind's `flex`/`block` utilities */
+[hidden] {
+  display: none !important;
+}
+ 
+/* ---------- 2. Metric cards ---------- */
+.metric-card {
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -14px rgb(15 23 42 / 0.2);
+}
+ 
+/* ---------- 3. Income / Expense toggle (custom radio "pills") ---------- */
+.type-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.type-pill:hover { border-color: #cbd5e1; color: #334155; }
+ 
+.type-option input:focus-visible + .type-pill {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.type-option input[value="expense"]:checked + .type-pill {
+  background: #fff1f2;
+  border-color: #fda4af;
+  color: var(--expense);
+}
+.type-option input[value="income"]:checked + .type-pill {
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+  color: var(--income);
+}
+ 
+/* ---------- 4. Form validation states ---------- */
+/* Two classes = higher specificity than Tailwind's single-class `border-slate-200` */
+.form-input.input-error {
+  border-color: #f43f5e;
+  box-shadow: 0 0 0 4px rgb(244 63 94 / 0.12);
+  animation: shake 0.3s ease-in-out;
+}
+.error-msg {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--expense);
+}
+.error-msg:empty { display: none; }
+ 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+ 
+/* ---------- 5. Segmented filter control ---------- */
+.segmented {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: #f1f5f9;
+  border-radius: 0.625rem;
+}
+.filter-btn {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.filter-btn:hover { color: #0f172a; }
+.filter-btn[aria-pressed="true"] {
+  background: var(--surface);
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08), 0 1px 1px rgb(15 23 42 / 0.04);
+}
+.filter-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+ 
+/* ---------- 6. Transaction list ---------- */
+.scroll-area {
+  max-height: 34rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.scroll-area::-webkit-scrollbar { width: 8px; }
+.scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+ 
+.tx-row {
+  animation: row-in 0.3s var(--ease-out) both;
+  /* --i is set per row by main.js for a staggered entrance, capped at 300ms */
+  animation-delay: min(calc(var(--i, 0) * 30ms), 300ms);
+  transition: background 0.15s;
+}
+.tx-row:hover { background: #f8fafc; }
+ 
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+ 
+/* Delete button: revealed on hover/focus on desktop, always visible on touch */
+.delete-btn {
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+}
+.tx-row:hover .delete-btn,
+.delete-btn:focus-visible { opacity: 1; }
+ 
+@media (hover: none) {
+  .delete-btn { opacity: 1; }
+}
+ 
+/* ---------- 7. Category progress bars ---------- */
+.progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #f1f5f9;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.7s var(--ease-out);
+}
+ 
+/* ---------- 8. Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  z-index: 50;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  background: #0f172a;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 10px 30px -10px rgb(15 23 42 / 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 150%);
+  transition: transform 0.35s var(--ease-out), opacity 0.35s;
+}
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.toast[data-variant="error"] { background: var(--expense); }
+ 
+/* ---------- 9. Misc ---------- */
+/* Hide number input spinners for a cleaner money field */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+ 
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+ 

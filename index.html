@@ -1,117 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Finance Tracker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A client-side personal finance dashboard built with vanilla JavaScript." />
+  <title>Personal Finance Tracker</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <link rel="stylesheet" href="style.css"/>
-    <script src="main.js" defer></script>
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS (Play CDN: great for learning/prototyping, not for production builds) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- App logic. `defer` = download now, run after the HTML is fully parsed -->
+  <script src="main.js" defer></script>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-800">
-    <header class="border-b border-slate-200 bg-white">
-    <div class="'mx-auto flex max-w-6xl items-center" gap-3 px-4 py-4">
-        <div class=""flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
-            <i data-lucide="wallet"></i>
-        </div>
-        <h1 class="text-lg font-semibold">Personal Finance Tracker</h1>
-        </div>
-    </header>
-    <main class="mx-auto max-w-6xl px-4 py-8">
-        <section class="grid gap-4 sm:grid-cols-3">
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-               <div class="flex items-center` justify-between">
-                        <p class="text-sm font-medium text-slate-500">Total Balance</p>
-                        <i data-lucide="circle" class="h-5 w-5 text-emerald-600"></i>
-                        
-                </div>
-                <p id="balance-amount" class="mt-2 text-3xl font-bold">$1250.00</p>
-            </article>
 
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-slate-500">Total Income</p>
-                    <i data-lucide="trending-up" class="h-5 w-5 text-green-600"> </i> 
-                   
-                   
-                    </div>
-                     <p id="income-amount" class="mt-2 text-3xl font-bold text-emerald-600">$1240.00</p>
-            </article>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-slate-500">TotalExpenses</p>
-                    <i data-lucide="trending-down" class="h-5 w-5 text-red-600"></i>
-                   
-           
+  <!-- ===================== HEADER ===================== -->
+  <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
+          <i data-lucide="wallet" class="h-5 w-5"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-semibold leading-tight">Personal Finance Tracker</h1>
+          <p class="text-xs text-slate-500">Track income, expenses and spending habits</p>
+        </div>
+      </div>
+      <p id="today-label" class="hidden text-sm text-slate-500 sm:block"></p>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- ===================== METRIC CARDS ===================== -->
+    <section aria-label="Account summary" class="grid gap-4 sm:grid-cols-3">
+      <article class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-slate-500">Total Balance</p>
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+            <i data-lucide="landmark" class="h-5 w-5"></i>
+          </span>
+        </div>
+        <p id="balance-amount" class="mt-3 text-3xl font-bold tracking-tight tabular-nums">$0.00</p>
+        <p class="mt-1 text-xs text-slate-500">Income minus expenses</p>
+      </article>
+
+      <article class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-slate-500">Total Income</p>
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+            <i data-lucide="trending-up" class="h-5 w-5"></i>
+          </span>
+        </div>
+        <p id="income-amount" class="mt-3 text-3xl font-bold tracking-tight tabular-nums text-emerald-600">$0.00</p>
+        <p id="income-caption" class="mt-1 text-xs text-slate-500">0 transactions</p>
+      </article>
+
+      <article class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-slate-500">Total Expenses</p>
+          <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
+            <i data-lucide="trending-down" class="h-5 w-5"></i>
+          </span>
+        </div>
+        <p id="expense-amount" class="mt-3 text-3xl font-bold tracking-tight tabular-nums text-rose-600">$0.00</p>
+        <p id="expense-caption" class="mt-1 text-xs text-slate-500">0 transactions</p>
+      </article>
+    </section>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+
+      <!-- ===================== LEFT COLUMN ===================== -->
+      <div class="space-y-6">
+
+        <!-- Add Transaction Form -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+            <i data-lucide="circle-plus" class="h-4 w-4 text-slate-400"></i>
+            Add transaction
+          </h2>
+
+          <!-- `novalidate` disables browser popups so OUR JS validation controls the UX -->
+          <form id="transaction-form" class="space-y-4" novalidate>
+
+            <fieldset>
+              <legend class="mb-1.5 block text-sm font-medium text-slate-700">Type</legend>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="type-option">
+                  <input type="radio" name="type" value="expense" class="sr-only" checked />
+                  <span class="type-pill"><i data-lucide="arrow-down-right" class="h-4 w-4"></i> Expense</span>
+                </label>
+                <label class="type-option">
+                  <input type="radio" name="type" value="income" class="sr-only" />
+                  <span class="type-pill"><i data-lucide="arrow-up-right" class="h-4 w-4"></i> Income</span>
+                </label>
+              </div>
+              <p class="error-msg" data-error-for="type"></p>
+            </fieldset>
+
+            <div>
+              <label for="description" class="mb-1.5 block text-sm font-medium text-slate-700">Description</label>
+              <input id="description" name="description" type="text" maxlength="60" autocomplete="off"
+                     placeholder="e.g. Grocery run" aria-describedby="description-error"
+                     class="form-input w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" />
+              <p id="description-error" class="error-msg" data-error-for="description"></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="amount" class="mb-1.5 block text-sm font-medium text-slate-700">Amount</label>
+                <div class="relative">
+                  <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-slate-400">$</span>
+                  <input id="amount" name="amount" type="number" inputmode="decimal" step="0.01" min="0"
+                         placeholder="0.00" aria-describedby="amount-error"
+                         class="form-input w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 pl-7 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" />
                 </div>
-                 <p id="expense-amount" class="mt-2 text-3xl font-bold text-rose-600">$1000.00</p>
-               
-                </article>
+                <p id="amount-error" class="error-msg" data-error-for="amount"></p>
+              </div>
+
+              <div>
+                <label for="date" class="mb-1.5 block text-sm font-medium text-slate-700">Date</label>
+                <input id="date" name="date" type="date" aria-describedby="date-error"
+                       class="form-input w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" />
+                <p id="date-error" class="error-msg" data-error-for="date"></p>
+              </div>
+            </div>
+
+            <div>
+              <label for="category" class="mb-1.5 block text-sm font-medium text-slate-700">Category</label>
+              <select id="category" name="category" aria-describedby="category-error"
+                      class="form-input w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100">
+                <option value="" disabled selected>Select a category</option>
+                <!-- Options are injected by main.js from the CATEGORIES constant -->
+              </select>
+              <p id="category-error" class="error-msg" data-error-for="category"></p>
+            </div>
+
+            <button type="submit"
+                    class="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 active:scale-[.98]">
+              <i data-lucide="plus" class="h-4 w-4"></i>
+              Add transaction
+            </button>
+          </form>
         </section>
 
-
-        <section class="mt-6 max-w-md rounded-2x1 border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 class="mb-4 text-base font-semibold"> Add transaction</h2>
-            <form id="transaction-form" class ="space-y-4" novalidate>
-                <div>
-                    <label for="type" class="mb-1 block text-sm font-medium text-slate-700">Type</label>
-                    <select id="type" name="type" class ="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm">
-                        <option value="expense">Expense</option>
-                        <option value="income">Income</option>
-
-                    </select>
-                </div>
-
-                <div>
-                    <label for="description" class="mb-1 block text-sm font-medium text-slate-700">Description</label>
-                    <input id="description" name="description" type="text" placeholder="e.g. Groceries"
-                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"/>
-                    <p id="description-error" class="'mt-1 text-xs text-rose-600"></p>
-
-
-                </div>
-
-                <div>
-                    <label for="amount" class="mb-1 block text-sm font-medium text-slate-700">Amount</label>
-                    <input id="amount" name="amount" type="number" step="0.01" placeholder="0.00"
-                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"/>
-                    <p id="amouint-error" class="mt-1 text-xs text-rose-600"></p>
-
-                </div>
-
-                <div>
-                    <label for="category" class="mb-1 block text-sm font-medium text-slate-700">Category</label>
-                    <select id="category" name="category" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm">
-                            <option value="">Select a category</option>
-                            <option value="Salary">Salary</option>
-                            <option value="Freelance">Freelance</option>
-                            <option value="Housing">Housing</option>
-                            <option value="Food">Food</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Other">Other</option>
-                    </select>
-                    <p id="category-error" class="'mt-1 text-xs text-rose-600"></p>
-                </div>
-
-                    
-                <div>
-                    <label for="date" class="mb-1 block text-sm font-medium text-slate-700">Date</label>
-                    <input id="date" name="date" type="date"
-                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"/>
-                    <p id="date-error" class="mt-1 text-xs text-rose-600"></p>
-                </div>
-
-                <button type="submit"
-                    class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
-                  Add transaction
-                </button>
-            </form>
+        <!-- Category Breakdown -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 class="flex items-center gap-2 text-base font-semibold">
+            <i data-lucide="chart-pie" class="h-4 w-4 text-slate-400"></i>
+            Spending by category
+          </h2>
+          <p id="breakdown-total" class="mt-0.5 text-xs text-slate-500"></p>
+          <ul id="breakdown-list" class="mt-5 space-y-4"></ul>
         </section>
-    </main>
-    
+      </div>
+
+      <!-- ===================== RIGHT COLUMN: TRANSACTIONS ===================== -->
+      <section class="rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-2">
+        <div class="flex flex-col gap-4 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="list" class="h-4 w-4 text-slate-400"></i>
+              Recent transactions
+            </h2>
+            <p id="result-count" class="mt-0.5 text-xs text-slate-500"></p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Type filter (segmented control) -->
+            <div id="type-filter" class="segmented" role="group" aria-label="Filter by type">
+              <button type="button" class="filter-btn" data-filter-type="all" aria-pressed="true">All</button>
+              <button type="button" class="filter-btn" data-filter-type="income" aria-pressed="false">Income</button>
+              <button type="button" class="filter-btn" data-filter-type="expense" aria-pressed="false">Expense</button>
+            </div>
+
+            <!-- Category filter -->
+            <label for="category-filter" class="sr-only">Filter by category</label>
+            <div class="relative">
+              <i data-lucide="list-filter" class="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"></i>
+              <select id="category-filter"
+                      class="rounded-lg border border-slate-200 bg-white py-2 pl-8 pr-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100">
+                <option value="all">All categories</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rows are rendered by main.js -->
+        <ul id="transaction-list" class="scroll-area divide-y divide-slate-100" aria-live="polite"></ul>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="flex flex-col items-center justify-center px-6 py-16 text-center" hidden>
+          <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+            <i data-lucide="inbox" class="h-7 w-7"></i>
+          </div>
+          <h3 id="empty-title" class="text-sm font-semibold text-slate-800">No transactions yet</h3>
+          <p id="empty-text" class="mt-1 max-w-xs text-sm text-slate-500"></p>
+          <button id="seed-btn" type="button"
+                  class="mt-5 inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
+            <i data-lucide="sparkles" class="h-4 w-4 text-indigo-500"></i>
+            Load sample data
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="pb-4 text-center text-xs text-slate-400">
+      Your data never leaves this browser. It is stored in <code>localStorage</code>.
+    </footer>
+  </main>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
