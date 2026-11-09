@@ -80,10 +80,77 @@ const form = document.getElementById('transaction-form');
  * @returns {void}
  */
 
+/***
+ * checks the raw form input and converts it into clean values.
+ * 
+ * 
+ * @param{object} raw - the values  exactly as typed ( all strings).
+ * @returns {{isValid: boolean, error:Object, values: Object}}
+ * isValid: true if everything is ok.
+ * errors: field name -> error message, for each problem found.
+ * values: the cleaned-up values, with amount converted to a number.
+ */
+
+function validateTransaction(raw){
+    const error = {};
+    
+    const description = raw.description.trim;
+
+    const amount =Number(raw.amount);
+
+    if (raw.Description ==='') {
+        error.description = 'Please enter a description.';
+
+    }
+
+    if (raw.amount === ''){
+        error.amount = 'please enter an amount';
+
+    } else if (!Number.isFinite(amount) || amount <= 0) {
+        error.amount = 'Amount must be a number greater than 0.';
+    }
+
+    if (raw.category === ''){
+        error.category = 'Please choose a category.';
+    }
+
+    if (raw.date ===''){
+        error.date ='Please pick a date.';
+    }
+
+    const isValid = Object.keys(errors).length === 0;
+
+    return {
+        isValid,
+        errors,
+        values: {
+            description,
+            amount,
+            type: raw.type,
+            category: raw.category,
+            date: raw.date,
+        
+        },
+      
+    };
+}
 function handleFormSubmit(event){
     event.preventDefault();
+
+    const formData = new FormData(form);
+    const raw = {
+        type: formData.get('type'),
+        description: formData.get('description'),
+        amount: formData.get('amount'),
+        category: formData.get('category'),
+        date: formData.get('date'),
+
+    };
+    console.log(raw);
+    console.log('amount is a', typeof raw.amount)
     console.log('Form submitted!');
 }
+
 
 form.addEventListener('submit',handleFormSubmit);
 
