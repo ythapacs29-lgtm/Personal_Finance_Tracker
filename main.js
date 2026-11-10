@@ -92,30 +92,31 @@ const form = document.getElementById('transaction-form');
  */
 
 function validateTransaction(raw){
-    const error = {};
+    
+    const errors = {};
     
     const description = raw.description.trim;
 
     const amount =Number(raw.amount);
 
     if (raw.Description ==='') {
-        error.description = 'Please enter a description.';
+        errors.description = 'Please enter a description.';
 
     }
 
     if (raw.amount === ''){
-        error.amount = 'please enter an amount';
+        errors.amount = 'please enter an amount';
 
     } else if (!Number.isFinite(amount) || amount <= 0) {
-        error.amount = 'Amount must be a number greater than 0.';
+        errors.amount = 'Amount must be a number greater than 0.';
     }
 
     if (raw.category === ''){
-        error.category = 'Please choose a category.';
+        errors.category = 'Please choose a category.';
     }
 
     if (raw.date ===''){
-        error.date ='Please pick a date.';
+        errors.date ='Please pick a date.';
     }
 
     const isValid = Object.keys(errors).length === 0;
